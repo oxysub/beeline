@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beeline → Accenture Airtable</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --text: #0c1222;
+        --text-secondary: #4a5a6a;
+        --surface: #ffffff;
+        --accent: #0d9488;
+        --accent-dark: #0f766e;
+        --accent-soft: #e0f2f0;
+        --accent-glow: rgba(13, 148, 136, 0.18);
+        --danger: #b91c1c;
+        --danger-bg: #fff1f2;
+        --warn-bg: #fffbeb;
+        --success-bg: #ecfdf5;
+        --success-border: #6ee7b7;
+        --radius-sm: 10px;
+        --radius: 14px;
+        --radius-lg: 20px;
+        --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.55;
+        color: var(--text);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        min-height: 100vh; /* older browsers */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0.65rem 0.9rem 0.75rem;
+        background:
+          radial-gradient(ellipse 100% 50% at 50% -10%, var(--accent-glow), transparent 42%),
+          linear-gradient(175deg, #f4f6f9 0%, #e9eef5 100%);
+      }
+      .wrap {
+        width: 100%;
+        max-width: 28rem;
+        flex: 0 0 auto;
+      }
+      .header-block {
+        margin-bottom: 0.6rem;
+        text-align: center;
+      }
+      @media (min-width: 400px) {
+        .header-block {
+          text-align: left;
+        }
+      }
+      .logo-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--accent-dark);
+        background: var(--surface);
+        border: 1px solid rgba(15, 118, 110, 0.15);
+        padding: 0.28rem 0.6rem;
+        border-radius: 999px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        margin: 0 0 0.45rem;
+      }
+      h1 {
+        font-size: clamp(1.1rem, 3.2vw, 1.32rem);
+        font-weight: 700;
+        line-height: 1.22;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.35rem;
+        color: var(--text);
+      }
+      .lead {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin: 0;
+        max-width: 50ch;
+      }
+      @media (min-width: 400px) {
+        .lead {
+          max-width: none;
+        }
+      }
+      .section-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin: 0 0 0.4rem;
+      }
+      .card {
+        background: var(--surface);
+        border-radius: 16px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 28px rgba(15, 23, 42, 0.07);
+        padding: 0.9rem 1rem 0.85rem;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+      }
+      .steps {
+        list-style: none;
+        margin: 0 0 0.65rem;
+        padding: 0;
+        counter-reset: step;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        line-height: 1.35;
+      }
+      .steps li {
+        position: relative;
+        margin: 0 0 0.4rem;
+        padding: 0 0 0.05rem 1.85rem;
+        line-height: 1.35;
+        min-height: 0;
+      }
+      .steps li:last-child {
+        margin-bottom: 0;
+      }
+      .steps li::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1.2rem;
+        height: 1.2rem;
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        font-size: 0.65rem;
+        font-weight: 700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border: 1px solid rgba(13, 148, 136, 0.2);
+      }
+      .dropzone {
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        border-radius: var(--radius);
+        cursor: pointer;
+        outline: none;
+      }
+      .dropzone:focus-visible .dropzone-surface {
+        box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--accent);
+      }
+      .dropzone-surface {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        min-height: 4.5rem;
+        padding: 0.7rem 0.8rem;
+        text-align: center;
+        background: linear-gradient(180deg, #fcfdfe 0%, #f3f5f8 100%);
+        border: 2px dashed #b8c0cc;
+        border-radius: var(--radius);
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      }
+      @media (min-width: 440px) {
+        .dropzone-surface {
+          flex-direction: row;
+          min-height: 0;
+          text-align: left;
+          padding: 0.55rem 0.9rem 0.55rem 0.75rem;
+          gap: 0.6rem;
+          align-items: center;
+        }
+        .dropzone-text {
+          align-items: flex-start;
+        }
+        .dropzone-text strong {
+          font-size: 0.88rem;
+        }
+        .dropzone p {
+          font-size: 0.78rem;
+        }
+        .dropzone-icon svg {
+          width: 32px;
+          height: 32px;
+        }
+      }
+      .dropzone-icon svg {
+        width: 36px;
+        height: 36px;
+      }
+      @media (max-height: 720px) {
+        body {
+          padding: 0.4rem 0.75rem 0.4rem;
+        }
+        .header-block {
+          margin-bottom: 0.35rem;
+        }
+        .logo-line {
+          margin-bottom: 0.3rem;
+          font-size: 0.6rem;
+          padding: 0.22rem 0.5rem;
+        }
+        h1 {
+          font-size: 1.02rem;
+          margin-bottom: 0.25rem;
+        }
+        .card {
+          padding: 0.7rem 0.85rem 0.65rem;
+        }
+        .dropzone-surface {
+          min-height: 3.75rem;
+          padding: 0.55rem 0.7rem;
+        }
+        .file-name {
+          margin-top: 0.3rem;
+        }
+      }
+      #zone:hover .dropzone-surface,
+      #zone:focus-within .dropzone-surface,
+      #zone.is-drag .dropzone-surface {
+        border-color: var(--accent);
+        background: linear-gradient(180deg, #f0fdfa 0%, #e6fffa 100%);
+        box-shadow: 0 0 0 4px var(--accent-glow);
+      }
+      .dropzone-icon {
+        color: #94a3b8;
+        line-height: 0;
+        transition: color 0.2s;
+      }
+      #zone:hover .dropzone-icon,
+      #zone.is-drag .dropzone-icon {
+        color: var(--accent);
+      }
+      .dropzone-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+      .dropzone-text strong {
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .dropzone p {
+        margin: 0;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+      }
+      .file-pick {
+        color: var(--accent-dark);
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(15, 118, 110, 0.35);
+        padding-bottom: 0.05rem;
+        cursor: pointer;
+      }
+      .file-pick:hover {
+        border-bottom-color: var(--accent);
+      }
+      .file-input {
+        position: absolute;
+        width: 0.01px;
+        height: 0.01px;
+        opacity: 0;
+        overflow: hidden;
+        z-index: -1;
+      }
+      .file-name {
+        display: block;
+        margin: 0.4rem 0 0;
+        min-height: 1.25em;
+        font-size: 0.72rem;
+        line-height: 1.35;
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-style: italic;
+        text-align: center;
+      }
+      @media (min-width: 400px) {
+        .file-name {
+          text-align: left;
+        }
+      }
+      .file-name:not(.empty) {
+        font-style: normal;
+        color: var(--text);
+        padding: 0.4rem 0.5rem 0.4rem 1.9rem;
+        background: #f0fdf9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%230d9488' stroke-width='2'%3E%3Cpath d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/%3E%3C/svg%3E")
+          0.5rem 0.5rem / 0.95rem 0.95rem no-repeat;
+        border: 1px solid rgba(13, 148, 136, 0.18);
+        border-radius: 8px;
+        word-break: break-all;
+        text-align: left;
+      }
+      .file-name.empty {
+        text-align: center;
+      }
+      @media (min-width: 400px) {
+        .file-name.empty {
+          text-align: left;
+        }
+      }
+      .actions {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      button.primary {
+        width: 100%;
+        background: linear-gradient(180deg, #14b8a6, var(--accent) 40%, #0a756b);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        padding: 0.55rem 1rem;
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        min-height: 2.4rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 2px 10px rgba(13, 148, 136, 0.32);
+        transition: filter 0.15s, transform 0.1s;
+      }
+      button.primary:hover:not(:disabled) {
+        filter: brightness(1.05);
+      }
+      button.primary:active:not(:disabled) {
+        transform: scale(0.99);
+      }
+      button.primary:disabled {
+        opacity: 0.48;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .hint {
+        font-size: 0.7rem;
+        line-height: 1.4;
+        color: var(--text-secondary);
+        margin: 0.1rem 0 0;
+        flex: 1;
+        min-width: 10rem;
+      }
+      @media (min-width: 480px) {
+        .actions {
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 0.5rem 0.75rem;
+        }
+        .hint {
+          margin: 0;
+          padding: 0;
+          min-width: 0;
+        }
+        button.primary {
+          width: auto;
+          min-width: 9.5rem;
+        }
+      }
+      .spinner {
+        display: none;
+        width: 1.1rem;
+        height: 1.1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        flex-shrink: 0;
+      }
+      .is-loading .spinner {
+        display: block;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .panel {
+        margin-top: 0.6rem;
+        padding: 0.85rem 0.95rem 0.95rem;
+        border-radius: var(--radius);
+        display: none;
+        border: 1px solid transparent;
+      }
+      .panel.show {
+        display: block;
+      }
+      .panel.success {
+        background: var(--success-bg);
+        border-color: var(--success-border);
+        box-shadow: 0 1px 2px rgba(5, 150, 105, 0.08);
+      }
+      .panel.warn {
+        background: var(--warn-bg);
+        border: 1px solid #fbbf24;
+        box-shadow: 0 1px 2px rgba(180, 83, 9, 0.06);
+      }
+      .panel.error {
+        background: var(--danger-bg);
+        border: 1px solid #fecdd3;
+      }
+      .panel h2 {
+        font-size: 1.02rem;
+        font-weight: 700;
+        margin: 0 0 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        letter-spacing: -0.02em;
+        color: #065f46;
+      }
+      .panel.error h2,
+      .panel.warn h2 {
+        color: var(--text);
+      }
+      .panel.success h2::before {
+        content: "";
+        display: block;
+        width: 1.4rem;
+        height: 1.4rem;
+        flex-shrink: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E")
+          center / contain no-repeat;
+      }
+      .panel p {
+        margin: 0.4rem 0;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        color: #134e4a;
+      }
+      .panel.error p,
+      .panel.warn p {
+        color: var(--text);
+      }
+      .result-lead {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #0f3d3a;
+        margin: 0 0 0.9rem;
+      }
+      .result-foot {
+        margin-top: 0.7rem;
+        color: #115e59;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 0.5rem 0 0;
+        border-top: 1px solid rgba(5, 150, 105, 0.15);
+      }
+      .result-cta {
+        margin: 0.85rem 0 0;
+        padding: 0.65rem 0 0;
+        border-top: 1px solid rgba(5, 150, 105, 0.12);
+      }
+      .panel.warn .result-cta,
+      .panel.error .result-cta {
+        border-top-color: rgba(0, 0, 0, 0.06);
+      }
+      .btn-airtable {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        width: 100%;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        font-family: inherit;
+        text-decoration: none;
+        color: var(--accent-dark);
+        background: #fff;
+        border: 1.5px solid rgba(13, 148, 136, 0.45);
+        border-radius: 9px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+      }
+      .btn-airtable:hover {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: #0b5c55;
+      }
+      .btn-airtable::after {
+        content: "";
+        width: 0.85rem;
+        height: 0.85rem;
+        flex-shrink: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%230f766e' stroke-width='2'%3E%3Cpath d='M7 5h8v8M6 14L15 5'/%3E%3C/svg%3E")
+          center / contain no-repeat;
+        opacity: 0.85;
+      }
+      .panel.warn .result-foot,
+      .panel.error .result-lead,
+      .panel.error .result-foot,
+      .panel.warn .result-lead {
+        color: var(--text);
+        border-color: rgba(0, 0, 0, 0.06);
+        font-weight: 400;
+      }
+      .stats {
+        list-style: none;
+        margin: 0.15rem 0 0;
+        padding: 0;
+        font-size: 0.9rem;
+        color: #134e4a;
+        border: 1px solid rgba(5, 150, 105, 0.12);
+        border-radius: var(--radius-sm);
+        background: rgba(255, 255, 255, 0.45);
+        overflow: hidden;
+      }
+      .panel.warn .stats,
+      .panel.error .stats {
+        color: var(--text);
+        border-color: rgba(0, 0, 0, 0.07);
+        background: rgba(255, 255, 255, 0.5);
+      }
+      .stats li {
+        padding: 0.5rem 0.7rem 0.5rem 0.9rem;
+        border-bottom: 1px solid rgba(5, 150, 105, 0.08);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.35rem;
+        line-height: 1.45;
+      }
+      .panel.warn .stats li,
+      .panel.error .stats li {
+        border-color: rgba(0, 0, 0, 0.05);
+      }
+      .stats li::before {
+        content: "•";
+        color: #14b8a6;
+        font-weight: bold;
+        line-height: 1.2;
+        flex-shrink: 0;
+      }
+      .panel.warn .stats li::before,
+      .panel.error .stats li::before {
+        color: var(--text-secondary);
+      }
+      .stats li:last-child {
+        border-bottom: none;
+      }
+      details.missing,
+      details.tech {
+        margin-top: 0.85rem;
+        font-size: 0.84rem;
+      }
+      details.missing summary,
+      details.tech summary {
+        cursor: pointer;
+        color: #0f766e;
+        font-weight: 600;
+        user-select: none;
+      }
+      .panel.error details summary,
+      .panel.warn details summary {
+        color: #b45309;
+      }
+      .panel.error details.missing summary,
+      .panel.error details.tech summary {
+        color: #64748b;
+      }
+      .id-list {
+        max-height: 9rem;
+        overflow: auto;
+        margin: 0.4rem 0 0;
+        padding: 0.5rem 0.75rem;
+        background: #fff;
+        border-radius: 6px;
+        font-family: ui-monospace, "Cascadia Code", monospace;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      details.tech pre {
+        margin: 0.45rem 0 0;
+        padding: 0.7rem 0.8rem;
+        background: #0f172a;
+        color: #e2e8f0;
+        border-radius: 8px;
+        overflow: auto;
+        max-height: 14rem;
+        font-size: 0.72rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .progress-card {
+        display: none;
+        margin-top: 0.6rem;
+        padding: 0.75rem 0.9rem 0.85rem;
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid rgba(15, 23, 42, 0.07);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+      }
+      .progress-card.show {
+        display: block;
+        animation: cardIn 0.3s ease;
+      }
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .progress-card h2 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin: 0 0 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .progress-card h2::before {
+        content: "";
+        width: 0.4rem;
+        height: 0.4rem;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px var(--accent-soft);
+        flex-shrink: 0;
+        animation: pulse 1.2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .progress-label {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 0.35rem;
+        letter-spacing: -0.02em;
+      }
+      .progress-sub {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        color: var(--text-secondary);
+        margin: 0 0 0.9rem;
+        word-break: break-word;
+        font-family: ui-monospace, monospace;
+        font-size: 0.78rem;
+      }
+      .progress-track {
+        height: 0.5rem;
+        background: #e2e8f0;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #5eead4, var(--accent) 50%, #0d9488);
+        border-radius: 999px;
+        transition: width 0.25s ease;
+        box-shadow: 0 0 12px rgba(13, 148, 136, 0.35);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="header-block">
+        <p class="logo-line">Beeline → Accenture Airtable</p>
+        <h1>Update Airtable from Beeline</h1>
+        <p class="lead">
+          Upload the exported Beeline Excel. Only rows with MSP Owner Eric are
+          extracted with minimum 8 months duration.
+        </p>
+      </header>
+
+      <form id="form" class="card" novalidate>
+        <p class="section-label">What to do</p>
+        <ol class="steps">
+          <li>Export from Beeline (Excel).</li>
+          <li>Drop the file in the box below, or <strong>browse</strong> to choose it.</li>
+          <li>Click <strong>Update Accenture airtable</strong> and wait for the green “Done” message.</li>
+        </ol>
+
+        <label
+          id="zone"
+          class="dropzone"
+          tabindex="0"
+          for="file"
+          aria-label="Drop Excel file here or click to choose"
+        >
+          <input
+            class="file-input"
+            type="file"
+            id="file"
+            name="file"
+            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+            required
+          />
+          <div class="dropzone-surface">
+            <span class="dropzone-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 7.5m0 0L7.5 12M12 7.5v9"
+                />
+              </svg>
+            </span>
+            <div class="dropzone-text">
+              <strong>Drop your Excel file here</strong>
+              <p>or <span class="file-pick">browse from your computer</span></p>
+            </div>
+          </div>
+        </label>
+        <p id="fileName" class="file-name empty" aria-live="polite">No file selected yet</p>
+
+        <div class="actions">
+          <button type="submit" class="primary" id="btn" disabled>
+            <span class="spinner" aria-hidden="true"></span>
+            <span id="btnLabel">Update Accenture airtable</span>
+          </button>
+          <p class="hint">Your file needs <strong>Request-ID</strong> and <strong>MSP Owner</strong> columns.</p>
+        </div>
+      </form>
+
+      <div id="progressCard" class="progress-card" role="status" aria-live="polite">
+        <h2>Working on your file…</h2>
+        <p id="progressLabel" class="progress-label">0 of 0</p>
+        <p id="progressSub" class="progress-sub" hidden></p>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBarWrap">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div id="panel" class="panel" role="status" aria-live="polite">
+        <h2 id="panelTitle"></h2>
+        <div id="panelBody"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const form = document.getElementById("form");
+        const zone = document.getElementById("zone");
+        const input = document.getElementById("file");
+        const fileName = document.getElementById("fileName");
+        const btn = document.getElementById("btn");
+        const panel = document.getElementById("panel");
+        const panelTitle = document.getElementById("panelTitle");
+        const panelBody = document.getElementById("panelBody");
+        const btnLabel = document.getElementById("btnLabel");
+        const progressCard = document.getElementById("progressCard");
+        const progressLabel = document.getElementById("progressLabel");
+        const progressSub = document.getElementById("progressSub");
+        const progressFill = document.getElementById("progressFill");
+        const progressBarWrap = document.getElementById("progressBarWrap");
+
+        function hasFile() {
+          return input.files && input.files[0];
+        }
+        function updateFileLabel() {
+          if (hasFile()) {
+            const f = input.files[0];
+            fileName.textContent = f.name;
+            fileName.classList.remove("empty");
+            btn.disabled = false;
+          } else {
+            fileName.textContent = "No file selected yet";
+            fileName.classList.add("empty");
+            btn.disabled = true;
+          }
+        }
+        input.addEventListener("change", updateFileLabel);
+
+        ["dragenter", "dragover"].forEach((ev) => {
+          zone.addEventListener(ev, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.classList.add("is-drag");
+          });
+        });
+        ["dragleave", "drop"].forEach((ev) => {
+          zone.addEventListener(ev, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.classList.remove("is-drag");
+          });
+        });
+        zone.addEventListener("drop", (e) => {
+          const f = e.dataTransfer.files[0];
+          if (!f) return;
+          const ok =
+            f.name.toLowerCase().endsWith(".xlsx") ||
+            f.name.toLowerCase().endsWith(".xls");
+          if (!ok) {
+            showError(
+              "Please use an Excel file (.xlsx or .xls).",
+            );
+            return;
+          }
+          input.files = e.dataTransfer.files;
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+
+        function hidePanel() {
+          panel.className = "panel";
+          panel.classList.remove("show");
+          panelTitle.textContent = "";
+          panelBody.innerHTML = "";
+        }
+        function showError(message) {
+          setProgressVisible(false);
+          form.classList.remove("is-loading");
+          btn.disabled = hasFile() ? false : true;
+          panel.className = "panel error show";
+          panelTitle.textContent = "Something went wrong";
+          panelBody.innerHTML = "<p>" + escapeHtml(message) + "</p>";
+        }
+        function escapeHtml(s) {
+          const d = document.createElement("div");
+          d.textContent = s;
+          return d.innerHTML;
+        }
+        function isSafeAirtableUrl(u) {
+          if (!u || typeof u !== "string") return false;
+          try {
+            const x = new URL(u);
+            return x.protocol === "https:" && x.hostname === "airtable.com";
+          } catch (e) {
+            return false;
+          }
+        }
+        function escapeAttr(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/</g, "&lt;")
+            .replace(/'/g, "&#39;");
+        }
+        function formatServerDetail(detail) {
+          if (detail == null) return "Unknown error";
+          if (typeof detail === "string") return detail;
+          if (Array.isArray(detail)) {
+            return detail
+              .map((x) => (x && x.msg) || JSON.stringify(x))
+              .join(" ");
+          }
+          return String(detail);
+        }
+        function setProgressVisible(on) {
+          if (on) {
+            progressCard.classList.add("show");
+            progressLabel.textContent = "Starting…";
+            progressSub.hidden = true;
+            progressSub.textContent = "";
+            progressFill.style.width = "0%";
+            progressBarWrap.setAttribute("aria-valuenow", "0");
+            progressBarWrap.setAttribute("aria-valuemax", "100");
+          } else {
+            progressCard.classList.remove("show");
+          }
+        }
+        function setProgressState(current, total, requestId, phase) {
+          const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+          progressLabel.textContent = current + " of " + total + " (Eric’s rows)";
+          var phaseLabel =
+            phase === "insert" ? "Adding new request" : "Updating last seen";
+          progressSub.textContent = phaseLabel + " · " + requestId;
+          progressSub.hidden = false;
+          progressFill.style.width = pct + "%";
+          progressBarWrap.setAttribute("aria-valuenow", String(pct));
+        }
+
+        function showResult(data) {
+          const nNew = data.inserted || 0;
+          const nUpd = data.updated_last_seen || 0;
+          const nMiss = data.missing_from_excel_count || 0;
+          const errors = data.errors || [];
+          const hasErr = errors.length > 0;
+          const ids = data.missing_from_excel_ids || [];
+          const rowsIn = data.rows_in_sheet;
+          const skipped = data.rows_skipped_not_eric;
+          const shortSkip = data.rows_skipped_short_duration;
+          const matched = data.rows_matched_eric;
+
+          let html = "";
+          if (rowsIn != null) {
+            html += "<p class='result-lead'>";
+            if (matched != null && skipped != null) {
+              html +=
+                "Found <strong>" +
+                rowsIn +
+                "</strong> data rows. <strong>" +
+                matched +
+                "</strong> " +
+                (matched === 1 ? "is" : "are") +
+                " ready to sync (Eric as MSP Owner, and at least 8 months when the duration is known). <strong>" +
+                skipped +
+                "</strong> " +
+                (skipped === 1 ? "row was" : "rows were") +
+                " skipped (other owners)";
+              if (shortSkip != null && shortSkip > 0) {
+                html +=
+                  "; <strong>" +
+                  shortSkip +
+                  "</strong> " +
+                  (shortSkip === 1 ? "row was" : "rows were") +
+                  " skipped (under 8 months).";
+              }
+              html += ".";
+            }
+            html += "</p>";
+          }
+          html += "<ul class='stats'>";
+          html +=
+            "<li><strong>" +
+            nNew +
+            "</strong> new " +
+            (nNew === 1 ? "request was added" : "requests were added") +
+            " to the list</li>";
+          html +=
+            "<li><strong>" +
+            nUpd +
+            "</strong> existing " +
+            (nUpd === 1 ? "row was" : "rows were") +
+            " updated (last seen date)</li>";
+          if (nMiss > 0) {
+            html +=
+              "<li><strong>" +
+              nMiss +
+              "</strong> in Airtable " +
+              (nMiss === 1 ? "is" : "are") +
+              " not in this file (this is often normal if old requests were closed)</li>";
+          }
+          html += "</ul>";
+
+          if (hasErr) {
+            html +=
+              "<p><strong>Some rows could not be saved.</strong> If this keeps happening, contact your technical contact and send them the details below.</p>";
+            html += "<details class='tech'><summary>What went wrong (technical)</summary><pre>" +
+              escapeHtml(JSON.stringify(errors, null, 2)) +
+              "</pre></details>";
+          } else {
+            html +=
+              "<p class='result-foot'>You’re all set. You can close this page or upload a newer file any time.</p>";
+          }
+          if (isSafeAirtableUrl(data.airtable_url)) {
+            html +=
+              "<p class='result-cta'><a class='btn-airtable' href=\"" +
+              escapeAttr(data.airtable_url) +
+              '" target="_blank" rel="noopener noreferrer">View Accenture Airtable</a></p>';
+          }
+
+          if (nMiss > 0 && ids.length) {
+            const show = ids.length > 20 ? ids.slice(0, 20).join("\n") + "\n…" : ids.join("\n");
+            html +=
+              "<details class='missing'><summary>IDs only in Airtable (" +
+              nMiss +
+              ")</summary><div class='id-list'>" +
+              escapeHtml(show) +
+              "</div></details>";
+          }
+          html +=
+            "<details class='tech'><summary>Full technical response</summary><pre>" +
+            escapeHtml(JSON.stringify(data, null, 2)) +
+            "</pre></details>";
+
+          if (hasErr) {
+            panel.className = "panel warn show";
+            panelTitle.textContent = "Finished with a few issues";
+          } else {
+            panel.className = "panel success show";
+            panelTitle.textContent = "Done";
+          }
+          panelBody.innerHTML = html;
+        }
+
+        async function readNdjsonResponse(res) {
+          const reader = res.body && res.body.getReader();
+          if (!reader) {
+            showError("Your browser could not read the response. Try a newer browser.");
+            return;
+          }
+          const dec = new TextDecoder();
+          var buf = "";
+          var hadComplete = false;
+          while (true) {
+            var part = await reader.read();
+            if (part.value) {
+              buf += dec.decode(part.value, { stream: !part.done });
+            }
+            var lines = buf.split("\n");
+            buf = lines.pop() || "";
+            for (var k = 0; k < lines.length; k++) {
+              var line = lines[k].trim();
+              if (!line) continue;
+              var ev;
+              try {
+                ev = JSON.parse(line);
+              } catch (p) {
+                showError("Invalid response from the server. Please try again.");
+                return;
+              }
+              if (ev.type === "error") {
+                showError(ev.message || "Unknown error");
+                return;
+              }
+              if (ev.type === "start") {
+                var t = ev.total || 0;
+                if (t === 0) {
+                  progressLabel.textContent = "0 of 0 (nothing to sync)";
+                  var ne0 = ev.rows_skipped_not_eric || 0;
+                  var sd0 = ev.rows_skipped_short_duration || 0;
+                  var parts0 = [];
+                  if (ne0 > 0) {
+                    parts0.push(
+                      ne0 +
+                        (ne0 === 1 ? " row did" : " rows did") +
+                        " not have Eric as MSP Owner"
+                    );
+                  }
+                  if (sd0 > 0) {
+                    parts0.push(
+                      sd0 +
+                        (sd0 === 1 ? " was" : " were") +
+                        " under 8 months (excluded)"
+                    );
+                  }
+                  progressSub.textContent = parts0.length
+                    ? parts0.join(" · ") + "."
+                    : "No data rows to process.";
+                  progressSub.hidden = false;
+                  progressFill.style.width = "100%";
+                } else {
+                  progressLabel.textContent = "0 of " + t;
+                  progressSub.hidden = true;
+                  progressFill.style.width = "0%";
+                }
+                progressBarWrap.setAttribute("aria-valuenow", "0");
+                progressBarWrap.setAttribute("aria-valuemax", "100");
+              } else if (ev.type === "progress") {
+                setProgressState(ev.current, ev.total, ev.request_id, ev.phase);
+              } else if (ev.type === "complete") {
+                hadComplete = true;
+                if (ev.result) showResult(ev.result);
+                else showError("No result from the server.");
+              }
+            }
+            if (part.done) break;
+          }
+          var last = buf.trim();
+          if (last) {
+            try {
+              var ev2 = JSON.parse(last);
+              if (ev2.type === "error") {
+                showError(ev2.message || "Unknown error");
+                return;
+              }
+              if (ev2.type === "complete" && ev2.result) {
+                hadComplete = true;
+                showResult(ev2.result);
+              }
+            } catch (e) {
+              /* ignore trailing partial */
+            }
+          }
+          if (!hadComplete) {
+            showError("The upload finished before we got a result. Please try again.");
+          }
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          hidePanel();
+          if (!hasFile()) {
+            showError("Please choose an Excel file first.");
+            return;
+          }
+          form.classList.add("is-loading");
+          setProgressVisible(true);
+          btn.disabled = true;
+          btnLabel.textContent = "Working…";
+
+          const fd = new FormData();
+          fd.append("file", input.files[0]);
+          try {
+            const res = await fetch(new URL("api/sync", document.baseURI), {
+              method: "POST",
+              body: fd,
+            });
+            if (!res.ok) {
+              setProgressVisible(false);
+              const data = await res.json().catch(() => ({}));
+              const msg = formatServerDetail(data.detail) || res.status + " " + res.statusText;
+              showError(msg);
+              return;
+            }
+            await readNdjsonResponse(res);
+          } catch (err) {
+            setProgressVisible(false);
+            showError(
+              "We couldn’t reach the server. Check your connection, or try again. (" +
+                (err && err.message) +
+                ")",
+            );
+          } finally {
+            setProgressVisible(false);
+            form.classList.remove("is-loading");
+            btn.disabled = false;
+            btnLabel.textContent = "Update Accenture airtable";
+            updateFileLabel();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

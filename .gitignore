@@ -1,0 +1,20 @@
+# Secrets — never commit
+.env
+
+# Local Beeline exports (default path for CLI; keep out of the repo)
+Request_Submitted_to_Supplier_Drill_Down.xlsx
+*.xlsx
+*.xls
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

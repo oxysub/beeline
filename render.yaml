@@ -1,0 +1,18 @@
+# Render Blueprint: New Blueprint in the Render dashboard (paste this file), or
+# create a Web Service from this Git repo; pushes to the linked branch auto-deploy.
+# Set secrets in the dashboard: AIRTABLE_TOKEN, optional AIRTABLE_TABLE_WEB_URL, etc.
+services:
+  - type: web
+    name: beeline
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: AIRTABLE_TOKEN
+        sync: false
+      - key: AIRTABLE_TABLE_WEB_URL
+        sync: false
+      - key: MIN_DURATION_MONTHS_SYNC
+        sync: false
+      - key: DURATION_DAYS_PER_MONTH
+        sync: false
