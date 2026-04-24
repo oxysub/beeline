@@ -80,9 +80,20 @@ Replace **beeline.oxydata.my** with whatever hostname you use.
 
 ## Git and Render
 
+**First time in this folder:** there must be a Git repo and a remote.
+
+```bash
+git init
+git remote add origin https://github.com/oxysub/beeline.git   # your URL
+git add .
+git commit -m "Initial"
+```
+
+(If you already ran the above, you can use `make push` after any new commits.)
+
 | Command | What it does |
 |--------|----------------|
-| `make push` | `git push` to `origin` and branch `main` (override with `REMOTE=…` `BRANCH=…`) |
+| `make push` | `git push -u` to `origin` and branch `main` (override with `REMOTE=…` `BRANCH=…`) |
 | `make render` | `POST` to a Render **deploy hook** (URL in env `RENDER_DEPLOY_HOOK` or in `.env`, gitignored) |
 | `make release` | `make push` then `make render` — use when you want both a push and a manual deploy trigger |
 
