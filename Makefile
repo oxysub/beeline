@@ -35,10 +35,12 @@ dev:
 	@echo "Open http://127.0.0.1:$(PORT)/   (Ctrl+C to stop)"
 	$(PYTHON) -m uvicorn app:app --host 127.0.0.1 --port $(PORT) --reload
 
-# Push the current branch to GitHub (e.g. oxysub/beeline)
+# One-time: git init  →  git remote add origin https://github.com/oxysub/beeline.git
+#   →  make push
 push:
-	@test -d .git || (printf 'No .git here. Use: cd to the beeline repo, git init, git remote add origin <url>.\n' >&2; exit 1)
-	git push $(REMOTE) $(BRANCH)
+	@test -d .git || (printf 'No .git in this folder. Run: git init && git add . && git commit -m "Initial"\n' >&2; exit 1)
+	@git remote get-url $(REMOTE) >/dev/null 2>&1 || (printf 'No remote %s. Add: git remote add %s <your-repo-url> (e.g. https://github.com/oxysub/beeline.git)\n' '$(REMOTE)' '$(REMOTE)' >&2; exit 1)
+	git push -u $(REMOTE) $(BRANCH)
 
 # Optional manual deploy. Copy the "Deploy hook" URL from:
 #   Render → your service → Settings → Build & deploy → Deploy hook
