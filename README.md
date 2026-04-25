@@ -36,6 +36,7 @@ Create `beeline/.env` (same folder as `app.py` and `bl_upload.py`):
 | `AIRTABLE_TABLE_WEB_URL` | No | “View in Airtable” link in the UI; defaults to a URL built from the base and table in code. |
 | `MIN_DURATION_MONTHS_SYNC` | No | Minimum **months** when duration parses (default `8`). |
 | `DURATION_DAYS_PER_MONTH` | No | Days in one “month” for W/D → months math (default `365.25/12`); use `30` for a 30-day month. |
+| `RENDER_DEPLOY_HOOK` | No | **Local only** (for `make render` / `make release`). Not used by the app at runtime. See [Git and Render](#git-and-render). |
 
 `python-dotenv` loads `.env` from the `beeline` directory automatically.
 
@@ -80,25 +81,49 @@ Replace **beeline.oxydata.my** with whatever hostname you use.
 
 ## Git and Render
 
-**First time in this folder:** there must be a Git repo and a remote.
+### Pushing to GitHub
+
+`make push` only runs `git push`; it does **not** commit your work. **Commits** are what Git uploads.
+
+**Every time you change code:**
+
+1. `git status` — confirm modified files appear.
+2. `git add -A` (or list paths) — stage changes.
+3. `git commit -m "Short description of the change"` — create a commit.
+4. `make push` — same as `git push -u origin main` by default (`REMOTE` / `BRANCH` in the Makefile can be overridden).
+
+If `git push` or `make push` prints **“Everything up-to-date”** but you just edited files, you skipped **add** / **commit** — nothing new exists on `main` yet, so the remote already matches your last commit.
+
+**First time in this folder** (no repo or remote yet):
 
 ```bash
 git init
-git remote add origin https://github.com/oxysub/beeline.git   # your URL
+git remote add origin https://github.com/oxysub/beeline.git   # use your repo URL
 git add .
 git commit -m "Initial"
+make push
 ```
 
-(If you already ran the above, you can use `make push` after any new commits.)
+### Deploying on Render
+
+Two mechanisms; you typically use **one** of them.
+
+| Approach | What you do | When to use it |
+|----------|-------------|----------------|
+| **Auto-deploy from Git** | In [Render](https://render.com): Web Service linked to this repo, branch `main`, auto-deploy enabled. After `make push`, Render starts a new deploy by itself. | Most common. No hook URL needed locally. |
+| **Deploy hook** | Render dashboard → your **Web Service** → **Settings** → **Build & deploy** → **Deploy hook** → create/copy the URL. Put it in **`beeline/.env`** (same file as `AIRTABLE_TOKEN`; `.env` is gitignored): `RENDER_DEPLOY_HOOK=https://api.render.com/deploy/srv-…` Then run `make render` to `POST` that URL and trigger a deploy. | Optional: manual trigger, or when auto-deploy is off. |
+
+**Makefile targets** (run from the **`beeline`** directory):
 
 | Command | What it does |
 |--------|----------------|
-| `make push` | `git push -u` to `origin` and branch `main` (override with `REMOTE=…` `BRANCH=…`) |
-| `make render` | `POST` to a Render **deploy hook** (URL in env `RENDER_DEPLOY_HOOK` or in `.env`, gitignored) |
-| `make release` | `make push` then `make render` — use when you want both a push and a manual deploy trigger |
+| `make push` | `git push -u origin main` (defaults; override with `REMOTE=…` `BRANCH=…`) |
+| `make render` | Loads `beeline/.env`, then `curl -X POST` to `RENDER_DEPLOY_HOOK`. **Fails** if that variable is unset — set it in `.env` or export it in the shell. |
+| `make release` | `make push` then `make render` — push new commits, then hit the hook (only useful if you use the hook). |
 
-- **Render service:** In the [Render](https://render.com) dashboard, create a **Web Service** from this Git repo, or add **`render.yaml`** as a **Blueprint**. Set **`AIRTABLE_TOKEN`** and any optional env keys in the service **Environment** tab.
-- **Auto-deploy:** If the service is connected to the repo with auto-deploy on push, **`make push`** is enough to start a new deploy; **`make render`** is for the optional **Deploy hook** (Render → your service → **Settings** → **Build & deploy** → **Deploy hook**). Add that URL to `beeline/.env` as `RENDER_DEPLOY_HOOK=…` for `make render` / `make release`.
+**Render service setup:** Create a **Web Service** from this Git repo, or use **`render.yaml`** as a **Blueprint**. In the service **Environment** tab, set **`AIRTABLE_TOKEN`** and any optional app keys from the [Configuration](#configuration) table. **`RENDER_DEPLOY_HOOK` is not** set on Render for the running app — it is only for your **local** machine when you run `make render`.
+
+**Quick checklist:** edited files → `git add` → `git commit` → `make push` → wait for Render (auto-deploy) **or** ensure `RENDER_DEPLOY_HOOK` is in `.env` and run `make render`.
 
 ## Run the sync from the command line
 
